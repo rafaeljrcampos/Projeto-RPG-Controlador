@@ -3,20 +3,26 @@ import pandas as pd
 from pages.Jogadores import update_data
 from dotenv import load_dotenv
 import os
+# Definindo titulo da Página
 st.set_page_config(page_title="Canto do Mestre", page_icon="🎲")
+
 # Armazenando o usuário e a senha em variáveis
 user = os.getenv("USER")
 password = os.getenv("PASSWORD")
 
 def main():
-    # Carregando o arquivo Excel
-    file_path = 'Projeto-RPG-Controlador/datasets/Pasta1.xlsx'
-    df = pd.read_excel(file_path)
+
+    caminho_arquivo_um = 'Projeto-RPG-Controlador/datasets/Pasta1.xlsx'
+    caminho_arquivo_dois = 'datasets/Pasta1.xlsx'
+    try:
+        df = pd.read_excel(caminho_arquivo_um)
+    except:
+        df = pd.read_excel(caminho_arquivo_dois)
+
     df.columns = [
         'Jogador', 'Personagem', 'Idade', 'Altura', 'Sexo', 'História', 
         'Personalidade', 'Inventário', 'Peso/Max', 'Peso/Atual', 'Foto', 'Vida', 'Carga'
     ]
-    # Exibindo a tabela ajustada e responsiva
     st.dataframe(df)
 
     # Opções para o usuário: Adicionar ou Editar personagem
@@ -71,28 +77,24 @@ def main():
             df = pd.concat([df, novo_personagem_df], ignore_index=True)
             
             # Salvar no Excel
-            df.to_excel(file_path, index=False)
+            try:
+                df.to_excel(caminho_arquivo_um, index=False)
+            except:
+                df.to_excel(caminho_arquivo_dois, index=False)
             st.success("Novo personagem adicionado com sucesso!")
 
     elif action == "Editar Personagem Existente":
-        # Formulário para editar ou excluir personagem
         st.header("Editar ou Excluir Personagem Existente")
         
         # Escolher o personagem para editar
         personagens = df['Personagem'].tolist()
         personagem_edit = st.selectbox("Escolha um personagem para editar ou excluir", personagens)
-
-        # Localizar o personagem na tabela
         personagem_data = df[df['Personagem'] == personagem_edit].iloc[0]
 
-        # Novo campo para editar o nome do personagem
         novo_nome = st.text_input("Nome do Personagem", value=personagem_edit)
-
         jogador = st.text_input("Jogador", value=personagem_data['Jogador'])
         idade = st.number_input("Idade", min_value=0, value=personagem_data['Idade'])
         altura = st.number_input("Altura", min_value=0.0, value=float(personagem_data['Altura']))
-
-        # Mapeamento do sexo
         sexo_opcoes = ["Masculino", "Feminino"]
         sexo_mapeamento = {"m": "Masculino", "f": "Feminino"}
         sexo_visual = sexo_mapeamento.get(personagem_data["Sexo"], "Masculino")
@@ -129,17 +131,21 @@ def main():
                 df.loc[df['Personagem'] == novo_nome, 'Carga'] = carga
                 
                 # Salvar no Excel
-                df.to_excel(file_path, index=False)
+                try:
+                    df.to_excel(caminho_arquivo_um, index=False)
+                except:
+                    df.to_excel(caminho_arquivo_dois, index=False)
                 st.success(f"Informações de {novo_nome} atualizadas com sucesso!")
                 update_data()
         
         if st.button("Excluir Personagem"):
             df = df[df['Personagem'] != personagem_edit]
-            df.to_excel(file_path, index=False)
+            try:
+                df.to_excel(caminho_arquivo_um, index=False)
+            except:
+                df.to_excel(caminho_arquivo_dois, index=False)
             st.success(f"Personagem {personagem_edit} excluído com sucesso!")
             update_data()
-
-
 
 def login():
     # Campos para o usuário e a senha

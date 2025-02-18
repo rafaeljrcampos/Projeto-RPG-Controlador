@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import random
-from functions import load_data
+from functions import load_data,openImage
 
 st.set_page_config(page_title="Página dos Jogadores", page_icon="🎲")
 
@@ -14,7 +14,8 @@ def update_data():
     st.session_state['data'] = load_data()
 
 # Botão para atualizar os dados
-if st.button('Atualizar dados'):
+if st.button('🔁'):
+    st.toast("🔄 Dados atualizados.")
     update_data()
 
 df_data = st.session_state['data']
@@ -33,17 +34,34 @@ try:
         try:
             col1, col2 = st.columns([2, 1])
             with col1:
-                st.image(player_stats['Foto'],width=200)
-
+                st.image(openImage(player_stats))
             def rolar_dado(lados):
                 return random.randint(1, lados)
             
             with col2:
-                st.image("Projeto-RPG-Controlador/datasets/dado.png", width=100)
-                valorsd = st.number_input(f"Dado de ", min_value=0, value=20)
-                if st.button("🎲 Rolar Dado"):
-                    resultado_dado = rolar_dado(valorsd)
-                    st.write(f"Resultado da rolagem ({valorsd}): {resultado_dado}")
+                try:
+                    c1, c2 = st.columns([1, 3])
+                    with c1:
+                        print()
+                    with c2:
+                        st.image("Projeto-RPG-Controlador/datasets/dado.png", width=100)
+                except:
+                    c1, c2 = st.columns([1, 3])
+                    with c1:
+                        print()
+                    with c2:
+                        st.image("datasets/dado.png", width=100,caption="Dado de 1d")
+
+                valor_do_dado = st.number_input("", min_value=0, value=20)
+                c1, c2 = st.columns([1, 2])
+                with c1:
+                    print()
+                with c2:
+                    botao_rolagem_dado = st.button(" 🎲 ")
+                if botao_rolagem_dado:
+                    resultado_dado = rolar_dado(valor_do_dado)
+                    st.toast(f"🎲 Resultado do 1d{valor_do_dado}: ({resultado_dado})")
+
         except Exception:
             st.warning("Imagem não disponível ou caminho inválido.")
 
