@@ -3,7 +3,8 @@ import pandas as pd
 import random
 from functions import load_data,openImage
 
-st.set_page_config(page_title="Página dos Jogadores", page_icon="🎲")
+st.set_page_config(page_title="Página dos Jogadores", page_icon="⚔️")
+
 with st.sidebar.expander("ℹ️ Página dos Jogadores"):
     st.write(
         "Nesta página, os jogadores podem visualizar informações detalhadas sobre os personagens da campanha, "

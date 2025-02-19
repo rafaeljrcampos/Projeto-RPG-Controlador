@@ -1,8 +1,13 @@
 import streamlit as st
 import pandas as pd
-from pages.Jogadores import update_data
 from dotenv import load_dotenv
 import os
+import importlib
+from streamlit_js_eval import get_cookie, set_cookie
+from functions import openImage
+
+jogadores_module = importlib.import_module("pages._⚔️_Jogadores")
+jogadores_module.update_data()
 # Definindo titulo da Página
 st.set_page_config(page_title="Canto do Mestre", page_icon="🎲")
 with st.sidebar.expander("ℹ️ Página do Mestre"): 
@@ -11,16 +16,11 @@ with st.sidebar.expander("ℹ️ Página do Mestre"):
         "além de adicionar ou remover personagens na campanha. "
         "Por questões de segurança e integridade dos dados, o acesso é restrito e só pode ser feito mediante login."
     )
-st.markdown(
-    """
-    <h1 style="text-align: center;">🚫 YOU SHALL NOT PASS 🧙🏻‍♂</h1>
-    """,
-    unsafe_allow_html=True
-)
 # Armazenando o usuário e a senha em variáveis
-user = os.getenv("USER")
-password = os.getenv("PASSWORD")
-
+#user = os.getenv("USER")
+#password = os.getenv("PASSWORD")
+user = "a"
+password = "a"
 def main():
 
     caminho_arquivo_um = 'Projeto-RPG-Controlador/datasets/Pasta1.xlsx'
@@ -45,6 +45,11 @@ def main():
         
         jogador = st.text_input("Jogador")
         personagem = st.text_input("Personagem")
+        foto = st.text_input("Foto (URL ou caminho)")
+        try:
+            st.image(openImage(str(foto)))
+        except:
+            st.warning("Imagem não carregada...")
         idade = st.number_input("Idade", min_value=0)
         altura = st.number_input("Altura", min_value=0.0)
 
@@ -59,7 +64,6 @@ def main():
         inventario = st.text_area("Inventário")
         peso_max = st.number_input("Peso Máximo", min_value=0.0)
         peso_atual = st.number_input("Peso Atual", min_value=0.0)
-        foto = st.text_input("Foto (URL ou caminho)")
         vida = st.number_input("Vida", min_value=0)
         carga = st.number_input("Carga", min_value=0)
         
@@ -101,9 +105,10 @@ def main():
         personagens = df['Personagem'].tolist()
         personagem_edit = st.selectbox("Escolha um personagem para editar ou excluir", personagens)
         personagem_data = df[df['Personagem'] == personagem_edit].iloc[0]
-
         novo_nome = st.text_input("Nome do Personagem", value=personagem_edit)
         jogador = st.text_input("Jogador", value=personagem_data['Jogador'])
+        st.image(openImage(personagem_data))
+        foto = st.text_input("Foto (URL ou caminho)", value=personagem_data['Foto'])
         idade = st.number_input("Idade", min_value=0, value=personagem_data['Idade'])
         altura = st.number_input("Altura", min_value=0.0, value=float(personagem_data['Altura']))
         sexo_opcoes = ["Masculino", "Feminino"]
@@ -117,7 +122,7 @@ def main():
         inventario = st.text_area("Inventário", value=personagem_data['Inventário'])
         peso_max = st.number_input("Peso Máximo", min_value=0.0, value=float(personagem_data['Peso/Max']))
         peso_atual = st.number_input("Peso Atual", min_value=0.0, value=float(personagem_data['Peso/Atual']))
-        foto = st.text_input("Foto (URL ou caminho)", value=personagem_data['Foto'])
+
         vida = st.number_input("Vida", min_value=0, value=personagem_data['Vida'])
         carga = st.number_input("Carga", min_value=0, value=personagem_data['Carga'])
         
@@ -159,6 +164,12 @@ def main():
             update_data()
 
 def login():
+    st.markdown(
+        """
+        <h1 style="text-align: center;">🚫 YOU SHALL NOT PASS 🧙🏻‍♂</h1>
+        """,
+        unsafe_allow_html=True
+    )
     # Campos para o usuário e a senha
     username = st.text_input("Usuário")
     pwd = st.text_input("Senha", type="password")
@@ -167,7 +178,8 @@ def login():
     if st.button("Login"):
         if username == user and pwd == password:
             st.session_state.logged_in = True
-            st.success("Login bem-sucedido!")
+            set_cookie("logged_in", "true",7)  # Salvando o login no cookie
+            st.session_state.mensagem = "Você está logado! 🚀"
             st.rerun()
         else:
             st.session_state.logged_in = False
@@ -175,7 +187,12 @@ def login():
 
 # Verificando se o usuário está logado
 if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
+    cookie_value = get_cookie("logged_in")  # Recupera o valor do cookie
+    st.session_state.logged_in = cookie_value == "true"
+    
+if "mensagem" in st.session_state:
+    st.toast(st.session_state.mensagem)
+    del st.session_state["mensagem"]  # Remove para não exibir de novo
 
 # Exibindo a tabela somente se o usuário estiver logado
 if st.session_state.logged_in:

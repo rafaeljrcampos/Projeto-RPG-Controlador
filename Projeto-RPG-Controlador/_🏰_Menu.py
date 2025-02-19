@@ -3,7 +3,6 @@ import pandas as pd
 from functions import load_data
 
 st.set_page_config(page_title="Salão Principal", page_icon="🎲")
-
 # Verifica se os dados já estão no session_state. Se não, carrega o Excel.
 if 'data' not in st.session_state:
     st.session_state['data'] = load_data()

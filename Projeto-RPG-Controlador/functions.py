@@ -22,7 +22,10 @@ def load_data():
         return pd.DataFrame()
     
 def openImage(player_stats):
-    url = player_stats['Foto']
+    try:
+        url = player_stats['Foto']
+    except:
+        url = player_stats
     response = requests.get(url)
     imagem = Image.open(BytesIO(response.content))
     imagem_resized = imagem.resize((250, 250))
