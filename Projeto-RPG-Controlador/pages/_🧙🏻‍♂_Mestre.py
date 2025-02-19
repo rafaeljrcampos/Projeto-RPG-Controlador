@@ -4,10 +4,8 @@ from dotenv import load_dotenv
 import os
 import importlib
 from streamlit_js_eval import get_cookie, set_cookie
-from functions import openImage
+from functions import openImage,update_data
 
-jogadores_module = importlib.import_module("pages._⚔️_Jogadores")
-jogadores_module.update_data()
 # Definindo titulo da Página
 st.set_page_config(page_title="Canto do Mestre", page_icon="🎲")
 with st.sidebar.expander("ℹ️ Página do Mestre"): 

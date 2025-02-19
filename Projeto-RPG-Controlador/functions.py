@@ -5,6 +5,10 @@ from PIL import Image
 import requests
 from io import BytesIO
 
+# Função para atualizar os dados
+def update_data():
+    st.session_state['data'] = load_data()
+    
 # Função para carregar os dados do Excel
 def load_data():
     file_path_first = os.path.abspath("Projeto-RPG-Controlador/datasets/Pasta1.xlsx")
