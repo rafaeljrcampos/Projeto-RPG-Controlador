@@ -17,10 +17,9 @@ with st.sidebar.expander("ℹ️ Página do Mestre"):
         "Por questões de segurança e integridade dos dados, o acesso é restrito e só pode ser feito mediante login."
     )
 # Armazenando o usuário e a senha em variáveis
-#user = os.getenv("USER")
-#password = os.getenv("PASSWORD")
-user = "a"
-password = "a"
+user = os.getenv("USER")
+password = os.getenv("PASSWORD")
+
 def main():
 
     caminho_arquivo_um = 'Projeto-RPG-Controlador/datasets/Pasta1.xlsx'
