@@ -5,7 +5,18 @@ from dotenv import load_dotenv
 import os
 # Definindo titulo da Página
 st.set_page_config(page_title="Canto do Mestre", page_icon="🎲")
-
+with st.sidebar.expander("ℹ️ Página do Mestre"): 
+    st.write(
+        "Esta página é exclusiva para o Mestre, permitindo a edição dos dados dos personagens, "
+        "além de adicionar ou remover personagens na campanha. "
+        "Por questões de segurança e integridade dos dados, o acesso é restrito e só pode ser feito mediante login."
+    )
+st.markdown(
+    """
+    <h1 style="text-align: center;">🚫 YOU SHALL NOT PASS 🧙🏻‍♂</h1>
+    """,
+    unsafe_allow_html=True
+)
 # Armazenando o usuário e a senha em variáveis
 user = os.getenv("USER")
 password = os.getenv("PASSWORD")
@@ -172,4 +183,5 @@ if st.session_state.logged_in:
 else:
     login()
 
+# Adicionar o texto no final
 st.sidebar.markdown("Desenvolvido por [Rafael Junior de Campos](https://github.com/rafaeljrcampos)")

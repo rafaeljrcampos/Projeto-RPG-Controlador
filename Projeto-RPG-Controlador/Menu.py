@@ -12,8 +12,12 @@ if 'data' not in st.session_state:
 st.sidebar.markdown("Desenvolvido por [Rafael Junior de Campos](https://github.com/rafaeljrcampos)")
 
 # Título da página
-st.markdown("# 🎲 PROJETO BÁSICO PARA CONTROLE DE RPG! 🧙🏻‍♂")
-
+st.markdown(
+    """
+    <h1 style="text-align: center;">🎲 PROJETO BÁSICO PARA CONTROLE DE RPG! 🧙🏻‍♂</h1>
+    """,
+    unsafe_allow_html=True
+)
 # Descrição do projeto
 st.markdown(
     """

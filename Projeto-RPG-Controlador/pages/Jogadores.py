@@ -4,6 +4,14 @@ import random
 from functions import load_data,openImage
 
 st.set_page_config(page_title="Página dos Jogadores", page_icon="🎲")
+with st.sidebar.expander("ℹ️ Página dos Jogadores"):
+    st.write(
+        "Nesta página, os jogadores podem visualizar informações detalhadas sobre os personagens da campanha, "
+        "incluindo atributos como vida, itens, história e outras características. "
+        "Também é possível selecionar personagens específicos para consulta. "
+        "Além disso, há um sistema de rolagem de dados no formato **1dX**, onde 'X' pode ser qualquer valor, "
+        "como 1d20, 1d22, e assim por diante, permitindo testes e ações dentro do jogo."
+    )
 
 # Verifica se os dados já estão no session_state. Se não, carrega o Excel.
 if 'data' not in st.session_state:
@@ -13,7 +21,7 @@ if 'data' not in st.session_state:
 def update_data():
     st.session_state['data'] = load_data()
 
-# Botão para atualizar os dados
+# Botão sem bordas
 if st.button('🔁'):
     st.toast("🔄 Dados atualizados.")
     update_data()
@@ -36,7 +44,8 @@ try:
             with col1:
                 st.image(openImage(player_stats))
             def rolar_dado(lados):
-                return random.randint(1, lados)
+                resultado_dado=random.randint(1, lados)
+                return resultado_dado
             
             with col2:
                 try:
@@ -51,7 +60,6 @@ try:
                         print()
                     with c2:
                         st.image("datasets/dado.png", width=100,caption="Dado de 1d")
-
                 valor_do_dado = st.number_input("", min_value=0, value=20)
                 c1, c2 = st.columns([1, 2])
                 with c1:
@@ -145,4 +153,8 @@ try:
 except Exception as e:
     st.error(f"Erro inesperado: {e}")
 
+for _ in range(2):  # Ajuste esse valor conforme necessário
+    st.sidebar.write("")
+
+# Adicionar o texto no final
 st.sidebar.markdown("Desenvolvido por [Rafael Junior de Campos](https://github.com/rafaeljrcampos)")
